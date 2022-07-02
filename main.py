@@ -90,13 +90,14 @@ class TerraHistoricus:
             )
 
             # 网站更新时间已改成发布时间，故无法使用更新时间判断
-            # if os.path.isfile(second_path + '/info.txt'):
-            #     with open(second_path + '/info.txt', 'r', encoding='utf-8') as f:
-            #         old_time = time.mktime(time.strptime(f.read().split('\n')[-1].split('：')[-1], '%Y-%m-%d %X'))
-            #         upgrade_time = comic_info['updateTime']
-            #         if old_time >= upgrade_time:
-            #             # print(f'{comic_info["title"]}已经是最新')
-            #             continue
+            # 网站重新加入更新时间，使用更新时间判断
+            if os.path.isfile(second_path + '/info.txt'):
+                with open(second_path + '/info.txt', 'r', encoding='utf-8') as f:
+                    old_time = time.mktime(time.strptime(f.read().split('\n')[-1].split('：')[-1], '%Y-%m-%d %X'))
+                    upgrade_time = comic_info["episodes"][0]["displayTime"]
+                    if old_time >= upgrade_time:
+                        print(f'{comic_info["title"]}已经是最新')
+                        continue
 
             if not os.path.isfile(second_path + '/' + 'info.txt'):
                 with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
@@ -108,7 +109,8 @@ class TerraHistoricus:
                         comic_info['introduction'].replace("\n", "\n                ")))
                     f.write(f'作品标签：{list_to_str(comic_info["keywords"])}\n')
                     f.write(f'阅读方向：{comic_info["direction"]}\n')
-                    f.write(f'发布时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["updateTime"]))}')
+                    f.write(f'发布时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["updateTime"]))}\n')
+                    f.write(f'更新时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["episodes"][0]["displayTime"]))}')
                     
             i = 1
             for episode in tqdm(comic_info['episodes'][::-1], desc=f'{comic_info["title"]}'):
