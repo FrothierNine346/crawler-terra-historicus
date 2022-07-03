@@ -99,21 +99,24 @@ class TerraHistoricus:
                         print(f'{comic_info["title"]}已经是最新')
                         continue
 
-            if not os.path.isfile(second_path + '/' + 'info.txt'):
-                with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
-                    f.write(f'作品标题：{comic_info["title"]}\n')
-                    f.write(f'作品副标题：{comic_info["subtitle"]}\n')
-                    f.write(f'作者：{list_to_str(comic_info["authors"])}\n')
-                    # f-string表达式不能出现反斜杠，用format方法替换
-                    f.write('作品介绍：{}\n'.format(
-                        comic_info['introduction'].replace("\n", "\n                ")))
-                    f.write(f'作品标签：{list_to_str(comic_info["keywords"])}\n')
-                    f.write(f'阅读方向：{comic_info["direction"]}\n')
-                    f.write(f'发布时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["updateTime"]))}\n')
-                    f.write(f'更新时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["episodes"][0]["displayTime"]))}')
+            # if not os.path.isfile(second_path + '/' + 'info.txt'):
+            with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
+                f.write(f'作品标题：{comic_info["title"]}\n')
+                f.write(f'作品副标题：{comic_info["subtitle"]}\n')
+                f.write(f'作者：{list_to_str(comic_info["authors"])}\n')
+                # f-string表达式不能出现反斜杠，用format方法替换
+                f.write('作品介绍：{}\n'.format(
+                    comic_info['introduction'].replace("\n", "\n                ")))
+                f.write(f'作品标签：{list_to_str(comic_info["keywords"])}\n')
+                f.write(f'阅读方向：{comic_info["direction"]}\n')
+                f.write(f'发布时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["updateTime"]))}\n')
+                f.write(f'更新时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["episodes"][0]["displayTime"]))}')
                     
             i = 1
             for episode in tqdm(comic_info['episodes'][::-1], desc=f'{comic_info["title"]}'):
+                old_time = episode['displayTime']
+                if upgrade_time >= old_time:
+                    continue
                 third_path = f'{second_path}/{i}-{path_detection.sub("!", str(episode["shortTitle"]))} ' \
                              f'{path_detection.sub("!", str(episode["title"]))}'
                 is_path(third_path)
