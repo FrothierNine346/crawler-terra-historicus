@@ -98,6 +98,8 @@ class TerraHistoricus:
                     if old_time >= upgrade_time:
                         print(f'{comic_info["title"]}已经是最新')
                         continue
+            else:
+                old_time = 0
 
             # if not os.path.isfile(second_path + '/' + 'info.txt'):
             with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
