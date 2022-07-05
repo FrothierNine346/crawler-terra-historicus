@@ -55,13 +55,6 @@ class TerraHistoricus:
             if not os.path.exists(path):
                 os.mkdir(path)
 
-        def list_to_str(list_str):
-            iter_list = iter(list_str)
-            temp = next(iter_list)
-            for temp_str in iter_list:
-                temp += f'、{temp_str}'
-            return temp
-
         def url_download(url, headers, name, path):
             if os.path.isfile(f'{path}/{name}'):
                 # print(f'{name}已存在')
@@ -105,11 +98,11 @@ class TerraHistoricus:
             with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
                 f.write(f'作品标题：{comic_info["title"]}\n')
                 f.write(f'作品副标题：{comic_info["subtitle"]}\n')
-                f.write(f'作者：{list_to_str(comic_info["authors"])}\n')
+                f.write(f'作者：{"、".join(comic_info["authors"])}\n')
                 # f-string表达式不能出现反斜杠，用format方法替换
                 f.write('作品介绍：{}\n'.format(
                     comic_info['introduction'].replace("\n", "\n                ")))
-                f.write(f'作品标签：{list_to_str(comic_info["keywords"])}\n')
+                f.write(f'作品标签：{"、".join(comic_info["keywords"])}\n')
                 f.write(f'阅读方向：{comic_info["direction"]}\n')
                 f.write(f'发布时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["updateTime"]))}\n')
                 f.write(f'更新时间：{time.strftime("%Y-%m-%d %X", time.localtime(comic_info["episodes"][0]["displayTime"]))}')
