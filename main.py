@@ -92,7 +92,7 @@ class TerraHistoricus:
                         print(f'{comic_info["title"]}已经是最新')
                         continue
             else:
-                upgrade_time = 0
+                old_time = 0
 
             # if not os.path.isfile(second_path + '/' + 'info.txt'):
             with open(second_path + '/info.txt', 'w', encoding='utf-8') as f:
@@ -109,8 +109,9 @@ class TerraHistoricus:
                     
             i = 1
             for episode in tqdm(comic_info['episodes'][::-1], desc=f'{comic_info["title"]}'):
-                old_time = episode['displayTime']
-                if upgrade_time >= old_time:
+                upgrade_time = episode['displayTime']
+                if old_time >= upgrade_time:
+                    i += 1
                     continue
                 third_path = f'{second_path}/{i}-{path_detection.sub("!", str(episode["shortTitle"]))} ' \
                              f'{path_detection.sub("!", str(episode["title"]))}'
