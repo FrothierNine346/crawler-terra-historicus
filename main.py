@@ -56,12 +56,6 @@ class TerraHistoricus:
                 os.mkdir(path)
 
         def url_download(url, headers, name, path):
-            if os.path.isfile(f'{path}/{name}'):
-                # print(f'{name}已存在')
-                return
-            else:
-                # print(f'正在下载{name}')
-                pass
             response = requests.get(
                 url=url,
                 headers=headers
@@ -75,12 +69,13 @@ class TerraHistoricus:
             second_path = f'{first_path}/{path_detection.sub("!", comic_info["title"])}'
             is_path(second_path)
 
-            url_download(
-                url=comic_info['cover'],
-                headers=self.headers,
-                name=f'封面.{comic_info["cover"].split(".")[-1]}',
-                path=second_path
-            )
+            if not os.path.isfile(f'{second_path}/封面.{comic_info["cover"].split(".")[-1]}'):
+                url_download(
+                    url=comic_info['cover'],
+                    headers=self.headers,
+                    name=f'封面.{comic_info["cover"].split(".")[-1]}',
+                    path=second_path
+                )
 
             # 网站更新时间已改成发布时间，故无法使用更新时间判断
             # 网站重新加入更新时间，使用更新时间判断
@@ -116,12 +111,12 @@ class TerraHistoricus:
                 third_path = f'{second_path}/{i}-{path_detection.sub("!", str(episode["shortTitle"]))} ' \
                              f'{path_detection.sub("!", str(episode["title"]))}'
                 is_path(third_path)
-                page_nums = self.__get_comic_pages(
-                    comic_info['cid'], episode['cid'])
+                page_nums = self.__get_comic_pages(comic_info['cid'], episode['cid'])
                 i += 1
+                
                 p = 1
                 for url in self.__get_comic_data(comic_info['cid'], episode['cid'], page_nums):
-                    if not os.path.isfile(third_path + f'/{p + 1}.{url.split(".")[-1]}'):
+                    if not os.path.isfile(third_path + f'/P{p}.{url.split(".")[-1]}'):
                         url_download(
                             url=url,
                             headers=self.headers,
