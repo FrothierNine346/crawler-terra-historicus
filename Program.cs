@@ -82,7 +82,7 @@ namespace TerraHistoricus
 
         private IEnumerable<string> GetComicData(string parentCid, string cid, int pageNums)
         {
-            for (int i = 1; i < pageNums; i++)
+            for (int i = 1; i <= pageNums; i++)
             {
                 ComicData comicData = client.GetFromJsonAsync<ComicData>($"https://terra-historicus.hypergryph.com/api/comic/{parentCid}/episode/{cid}/page?pageNum={i}").Result;
                 yield return comicData.data.url;
